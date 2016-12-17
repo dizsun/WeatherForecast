@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.dizsun.weatherforecast.MainActivity">
+    <item
+        android:id="@+id/select_city"
+        android:orderInCategory="100"
+        android:title="选择城市"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/exit"
+        android:orderInCategory="200"
+        android:title="退出"/>
+</menu>

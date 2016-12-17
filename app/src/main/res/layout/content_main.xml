@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:fadingEdge="vertical"
+    android:id="@+id/myScrollView">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.dizsun.weatherforecast.MainActivity"
+        tools:showIn="@layout/activity_main"
+        android:layout_marginTop="50dp">
+
+        <!--图片和基本信息-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="70dp"
+            >
+            <!--天气图片-->
+            <ImageView
+                android:id="@+id/imgWeather"
+                android:src="@drawable/d00"
+                android:scaleType="fitXY"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="80"
+                android:background="@drawable/button_selector"/>
+            <!--基本信息-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="20">
+
+                <TextView
+                    android:id="@+id/txtCityName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="西安市长安区"
+                    android:layout_weight="10"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:textStyle="normal|bold"/>
+
+                <TextView
+                    android:id="@+id/txtCurrentDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="2016年12月15日"
+                    android:layout_weight="10"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:textStyle="normal|bold"/>
+
+                <!--农历和星期-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="10">
+
+                    <TextView
+                        android:id="@+id/txtLunar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="十一月二十七"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:layout_weight="50"
+                        android:textStyle="normal|bold"/>
+
+                    <TextView
+                        android:id="@+id/txtCurrentWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="星期四"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:layout_weight="50"
+                        android:textStyle="normal|bold"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <!--天气概况和温度-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:text="天气："
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                tools:text="天气："
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/txtCurrentBrief"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="晴"
+                android:layout_weight="10"
+                android:textAlignment="textStart"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="温度："
+                android:layout_weight="10"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/txtCurrentTem"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="13"
+                android:layout_weight="10"
+                android:textAlignment="viewStart"/>
+        </LinearLayout>
+        <!--湿度和pm25-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="湿度："
+                android:layout_weight="10"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/txtDew"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="13"
+                android:layout_weight="10"
+                android:textAlignment="viewStart"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="pm2.5："
+                android:layout_weight="10"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/txtPM25"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="-"
+                android:layout_weight="10"
+                android:textAlignment="viewStart"/>
+        </LinearLayout>
+        <!--生活指数-->
+        <!--private String clothIndex;-->
+        <!--private String coldIndex;-->
+        <!--private String airConditionIndex;-->
+        <!--private String washCarIndex;-->
+        <!--private String exerciseIndex;-->
+        <!--private String uvIndex;-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:isScrollContainer="true"
+            android:layout_height="430dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="穿衣指数:"
+                    android:layout_weight="10"
+                    android:textAlignment="textStart"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/txtClothIndex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="@dimen/index_text_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="感冒指数:"
+                    android:layout_weight="10"/>
+
+                <TextView
+                    android:id="@+id/txtColdIndex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="@dimen/index_text_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="空调指数:"
+                    android:layout_weight="10"/>
+
+                <TextView
+                    android:id="@+id/txtAirConditionIndex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="@dimen/index_text_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="洗车指数:"
+                    android:layout_weight="10"/>
+
+                <TextView
+                    android:id="@+id/txtWashCarIndex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="@dimen/index_text_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="锻炼指数:"
+                    android:layout_weight="10"/>
+
+                <TextView
+                    android:id="@+id/txtExerciseIndex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="@dimen/index_text_size"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="紫外线指数:"
+                    android:layout_weight="10"/>
+
+                <TextView
+                    android:id="@+id/txtUvIndex"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:textSize="@dimen/index_text_size"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--<ListView-->
+        <!--android:id="@android:id/list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--tools:listitem="@layout/future_overview"-->
+        <!--android:layout_weight="3"/>-->
+        <ListView
+            android:id="@+id/futureWeatherList"
+            android:layout_width="match_parent"
+            tools:listitem="@layout/future_overview"
+            android:layout_weight="3"
+            android:scrollbars="none"
+            android:layout_height="420dp"/>
+    </LinearLayout>
+</ScrollView>
