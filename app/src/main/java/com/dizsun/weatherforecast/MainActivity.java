@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private FutureWeatherAdapter futureWeatherAdapter;
     private Dialog splashDialog;                    //应用开启时的缓冲页面
     private ListView futureWeatherList;             //未来天气简介列表
+
+    private float startY;
+    private float oldY;
+    private boolean shouldRefresh=false;
     /**
      * 处理线程回传的数据，根据<b>what</b>值来确定下一步更新那些组件
      */
@@ -179,7 +184,34 @@ public class MainActivity extends AppCompatActivity {
         txtAirConditionIndex.setText(weatherUtil.getLifeIndex().getAirConditionIndex());
         txtWashCarIndex.setText(weatherUtil.getLifeIndex().getWashCarIndex());
         //没有这一句时初始时scrollview会滑到最下面，这是让其滑到最上面，另外这一句必须在页面初始化后才能起作用，所以放在初始化语句的后面
-        ((ScrollView)findViewById(R.id.myScrollView)).smoothScrollTo(0,0);
+        ScrollView myScrollView = (ScrollView) findViewById(R.id.myScrollView);
+        myScrollView.smoothScrollTo(0, 0);
+        myScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        oldY = motionEvent.getY();
+                        startY = oldY;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float distance = motionEvent.getY() - oldY;
+                        myScrollView.smoothScrollBy(0, -(int) distance);
+                        oldY = motionEvent.getY();
+                        if (myScrollView.getScrollY() == 0 && oldY - startY >= 400) {
+                            shouldRefresh=true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if(shouldRefresh){
+                            initCitiesUtil();
+                            shouldRefresh=false;
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
