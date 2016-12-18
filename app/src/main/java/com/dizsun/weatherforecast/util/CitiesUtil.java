@@ -43,6 +43,7 @@ public class CitiesUtil {
         if(mValue==null &&existCityFile()){
             try {
                 this.mValue=FileHelper.readData(this.mContext,FileHelper.CITIES_FILE);
+                if(!getCityTable()) throw new Exception("城市列表初始化失败！");
             }catch (Exception e){
                 System.err.println("文件读取失败");
             }
@@ -58,7 +59,6 @@ public class CitiesUtil {
             this.mValue = mValue;
             try {
                 FileHelper.writeData(this.mContext,FileHelper.CITIES_FILE,this.mValue);
-                Log.d("WF","citiesUtils的初始化");
                 if(!getCityTable()) throw new Exception("城市列表初始化失败！");
             }catch (Exception e){
                 System.err.println(e.getMessage());
