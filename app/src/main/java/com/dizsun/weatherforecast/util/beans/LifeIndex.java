@@ -1,8 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
-
-import android.util.Log;
-
-import com.dizsun.weatherforecast.util.CityMessage;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONObject;
 
@@ -11,6 +7,7 @@ import net.sf.json.JSONObject;
  */
 
 public class LifeIndex {
+    //生活指数：穿衣指数、感冒指数、空调指数、洗车指数、锻炼指数、紫外线指数
     private String clothIndex;
     private String coldIndex;
     private String airConditionIndex;

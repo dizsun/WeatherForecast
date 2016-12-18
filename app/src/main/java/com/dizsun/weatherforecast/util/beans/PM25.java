@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONObject;
 

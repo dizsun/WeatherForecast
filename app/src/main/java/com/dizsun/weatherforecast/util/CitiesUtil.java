@@ -1,9 +1,8 @@
 package com.dizsun.weatherforecast.util;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.dizsun.weatherforecast.util.city.CityBean;
+import com.dizsun.weatherforecast.util.beans.CityMessage;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -20,11 +19,11 @@ import java.util.HashSet;
 
 public class CitiesUtil {
     private String mValue = null;
-    private ArrayList<CityBean> mCityBeans = null;
+    private ArrayList<CityMessage> cityMessages = null;
     private HashSet<String> mCities;
     private Context mContext;
 
-    private CityMessage mCityMessage;
+    private CityMessage cityMessage;
     private HashMap<String, HashMap<String, ArrayList<String>>> mCityTable = null;
 
 
@@ -65,40 +64,40 @@ public class CitiesUtil {
     }
 
     public CityMessage getCityMessage() {
-        return mCityMessage;
+        return cityMessage;
     }
 
-    public void setmCityMessage(CityMessage mCityMessage) {
-        this.mCityMessage = mCityMessage;
+    public void setCityMessage(CityMessage mCityMessage) {
+        this.cityMessage = mCityMessage;
     }
 
     private boolean getCityTable() {
         if (this.mValue == null) return false;
-        if (this.mCityBeans == null && getCityBeans() == null) return false;
+        if (this.cityMessages == null && getCityBeans() == null) return false;
         if (mCityTable == null) {
             mCityTable=new HashMap<>();
-            for (CityBean mCityBean : mCityBeans) {
-//                Log.d("WF",mCityBean.getProvince());
-                if (mCityTable.keySet().contains(mCityBean.getProvince())){
-                    HashMap<String, ArrayList<String>> prov=mCityTable.get(mCityBean.getProvince());
-                    if(prov.keySet().contains(mCityBean.getCity())){
-                        ArrayList<String>dis = prov.get(mCityBean.getCity());
-                        if(!dis.contains(mCityBean.getDistrict())) {
-                            dis.add(mCityBean.getDistrict());
-                            prov.put(mCityBean.getCity(),dis);
+            for (CityMessage mCityMessage : cityMessages) {
+//                Log.d("WF",cityMessage.getProvince());
+                if (mCityTable.keySet().contains(mCityMessage.getProvince())){
+                    HashMap<String, ArrayList<String>> prov=mCityTable.get(mCityMessage.getProvince());
+                    if(prov.keySet().contains(mCityMessage.getCity())){
+                        ArrayList<String>dis = prov.get(mCityMessage.getCity());
+                        if(!dis.contains(mCityMessage.getDistrict())) {
+                            dis.add(mCityMessage.getDistrict());
+                            prov.put(mCityMessage.getCity(),dis);
                         }
                     }else {
                         ArrayList<String> dis=new ArrayList<>();
-                        dis.add(mCityBean.getDistrict());
-                        prov.put(mCityBean.getCity(),dis);
+                        dis.add(mCityMessage.getDistrict());
+                        prov.put(mCityMessage.getCity(),dis);
                     }
-                    mCityTable.put(mCityBean.getProvince(),prov);
+                    mCityTable.put(mCityMessage.getProvince(),prov);
                 }else {
                     ArrayList<String> dis=new ArrayList<>();
                     HashMap<String,ArrayList<String>> cities=new HashMap<>();
-                    dis.add(mCityBean.getDistrict());
-                    cities.put(mCityBean.getCity(),dis);
-                    mCityTable.put(mCityBean.getProvince(),cities);
+                    dis.add(mCityMessage.getDistrict());
+                    cities.put(mCityMessage.getCity(),dis);
+                    mCityTable.put(mCityMessage.getProvince(),cities);
                 }
             }
 
@@ -113,19 +112,19 @@ public class CitiesUtil {
      *
      * @return 返回城市列表, 每个项目都是CityBean, 包含id, 省份, 城市名, 区/县名
      */
-    public ArrayList<CityBean> getCityBeans() {
+    public ArrayList<CityMessage> getCityBeans() {
         if (this.mValue == null) return null;
-        if (this.mCityBeans == null) {
+        if (this.cityMessages == null) {
             JSONObject citiesJsonObject = JSONObject.fromObject(this.mValue);
             JSONArray jsonArray = JSONArray.fromObject(citiesJsonObject.getJSONArray("result"));
-            ArrayList<CityBean> cbs=new ArrayList<>();
+            ArrayList<CityMessage> cbs=new ArrayList<>();
             for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;
-                cbs.add(new CityBean(jsonObject));
+                cbs.add(new CityMessage(jsonObject));
             }
-            this.mCityBeans = cbs;
+            this.cityMessages = cbs;
         }
-        return this.mCityBeans;
+        return this.cityMessages;
     }
 
     /**
@@ -179,13 +178,13 @@ public class CitiesUtil {
      * @return
      */
     public boolean isCity(String place) {
-        if (this.mCityBeans == null) {
+        if (this.cityMessages == null) {
             if (getCityBeans() == null) return false;
         }
         if (mCities == null) {
             mCities = new HashSet<>();
-            for (CityBean cityBean : mCityBeans) {
-                mCities.add(cityBean.getCity());
+            for (CityMessage cityMessage : cityMessages) {
+                mCities.add(cityMessage.getCity());
             }
         }
         return mCities.contains(place);

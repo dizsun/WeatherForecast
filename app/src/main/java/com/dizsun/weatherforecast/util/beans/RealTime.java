@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONObject;
 
@@ -11,6 +11,7 @@ public class RealTime {
     private String date;
     private String time;
     private int week;
+    //农历日期
     private String moon;
     private Weather weather;
     private Wind wind;

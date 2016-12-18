@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONObject;
 
@@ -6,9 +6,13 @@ import net.sf.json.JSONObject;
  * Created by sundiz on 16/11/29.
  */
 public class Wind {
+    //风向
     private String direct;
+    //风力
     private String power;
+    //？？？
     private String offset;
+    //风速
     private String windspeed;
 
     public Wind() {

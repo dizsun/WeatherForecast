@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dizsun.weatherforecast.util.weather.WeatherBrief;
+import com.dizsun.weatherforecast.util.beans.WeatherBrief;
 
 import java.util.ArrayList;
 
@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 
 public class FutureWeatherAdapter extends BaseAdapter{
+    //今天和未来四天天气列表
     private ArrayList<WeatherBrief> futureBriefs;
     private final Context context;
 
@@ -45,10 +46,13 @@ public class FutureWeatherAdapter extends BaseAdapter{
         WeatherBrief weatherBrief = futureBriefs.get(position);
         int imgDayId = context.getResources().getIdentifier("d"+nameConverter(weatherBrief.getDay().getCode()),"drawable",context.getPackageName());
         int imgNightId = context.getResources().getIdentifier("n"+nameConverter(weatherBrief.getNight().getCode()),"drawable",context.getPackageName());
+        //白天天气图标
         ((ImageView)view.findViewById(R.id.imgDay)).setImageDrawable(context.getDrawable(imgDayId));
+        //夜间天气图标
         ((ImageView)view.findViewById(R.id.imgNight)).setImageDrawable(context.getDrawable(imgNightId));
         ((TextView)view.findViewById(R.id.txtDate)).setText(weatherBrief.getDate());
         ((TextView)view.findViewById(R.id.txtWeek)).setText(weatherBrief.getWeek());
+        //白天天气简介
         ((TextView)view.findViewById(R.id.txtDayBrief)).setText(weatherBrief.getDay().getWeather());
         ((TextView)view.findViewById(R.id.txtNightBrief)).setText(weatherBrief.getNight().getWeather());
         ((TextView)view.findViewById(R.id.txtHighTem)).setText(weatherBrief.getDay().getHighTemp()+"°C");
@@ -63,11 +67,20 @@ public class FutureWeatherAdapter extends BaseAdapter{
         return inflatedView;
     }
 
+    /**
+     * 设置列表内容并更新列表
+     * @param futureBriefs
+     */
     public void setFutureBriefs(ArrayList<WeatherBrief> futureBriefs) {
         this.futureBriefs = futureBriefs;
         notifyDataSetChanged();
     }
 
+    /**
+     * 将图片名字补位为合适的形式，如1补位为01
+     * @param name
+     * @return
+     */
     private String nameConverter(String name){
         if(name.length()==1) return "0"+name;
         return name;

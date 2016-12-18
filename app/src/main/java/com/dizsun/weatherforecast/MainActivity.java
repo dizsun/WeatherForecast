@@ -18,7 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dizsun.weatherforecast.util.CitiesUtil;
-import com.dizsun.weatherforecast.util.CityMessage;
+import com.dizsun.weatherforecast.util.beans.CityMessage;
 import com.dizsun.weatherforecast.util.FileHelper;
 import com.dizsun.weatherforecast.util.PureNetUtil;
 import com.dizsun.weatherforecast.util.WeatherUtil;
@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private Dialog splashDialog;                    //应用开启时的缓冲页面
     private ListView futureWeatherList;             //未来天气简介列表
 
-    private float startY;
-    private float oldY;
-    private boolean shouldRefresh=false;
+    private float startY;                           //按下屏幕的y坐标
+    private float oldY;                             //滑动时的上一时刻的y坐标
+    private boolean shouldRefresh=false;            //标记下滑时是否应该更新
     /**
      * 处理线程回传的数据，根据<b>what</b>值来确定下一步更新那些组件
      */
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         citiesUtil = new CitiesUtil(context);
         weatherUtil = new WeatherUtil(context, citiesUtil);
-
+        //实例化各组件
         imgWeather = (ImageView) findViewById(R.id.imgWeather);
         txtCityName = (TextView) findViewById(R.id.txtCityName);
         txtCurrentDate = (TextView) findViewById(R.id.txtCurrentDate);
@@ -109,9 +109,7 @@ public class MainActivity extends AppCompatActivity {
         txtAirConditionIndex = (TextView) findViewById(R.id.txtAirConditionIndex);
         txtWashCarIndex = (TextView) findViewById(R.id.txtWashCarIndex);
         futureWeatherList = (ListView) findViewById(R.id.futureWeatherList);
-        /**
-         * 设置单击监听器，单击图标舒心天气数据
-         */
+         // 设置单击监听器，单击图标刷新天气数据
         imgWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,12 +118,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         futureWeatherAdapter = new FutureWeatherAdapter(context);
-
+        //初始化时设为西安长安区的天气
         CityMessage cityMessage = new CityMessage();
         cityMessage.setProvince("陕西");
         cityMessage.setCity("西安");
         cityMessage.setDistrict("长安");
-        citiesUtil.setmCityMessage(cityMessage);
+        citiesUtil.setCityMessage(cityMessage);
         showSplashScreen();
         initCitiesUtil();
     }

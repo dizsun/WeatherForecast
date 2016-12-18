@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONObject;
 
@@ -9,10 +9,11 @@ import java.text.SimpleDateFormat;
  */
 public class WeatherBrief  {
     private JSONObject weathers;
-
+    //天气简介
     private WeatherInfo day;
     private WeatherInfo dawn;
     private WeatherInfo night;
+    //日期
     private String week;
     private String date;
 

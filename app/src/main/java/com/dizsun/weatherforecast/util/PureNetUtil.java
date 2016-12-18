@@ -15,12 +15,15 @@ import java.util.Map;
  *
  */
 public class PureNetUtil implements Runnable {
+    //运行选项，获取那种信息
     public static final int GET_CITIES=0;
     public static final int GET_WEATHER=1;
     public static final int GET_PM25=3;
+    //返回的what值
     public static final int WHAT_CITY =0x123;
     public static final int WHAT_WEATHER =0x234;
     public static final int WHAT_PM25 =0x345;
+
     private static final String CITIES_URL="http://v.juhe.cn/weather/citys?key=739bfe395c42a1ddf500b2cf65c02cce";
     private static final String WEATHER_URL="http://op.juhe.cn/onebox/weather/query?cityname=";
     private static final String KEY="01d9e875539fbe6355d7ee8c9d2320de";
@@ -43,7 +46,7 @@ public class PureNetUtil implements Runnable {
     }
 
     /**
-     * get方法直接调用post方法
+     * get方法从传入的url中获取json字符串
      * @param url 网络地址
      * @return 返回网络数据
      */

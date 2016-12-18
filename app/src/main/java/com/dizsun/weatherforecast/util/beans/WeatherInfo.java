@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONArray;
 
@@ -6,10 +6,15 @@ import net.sf.json.JSONArray;
  * Created by sundiz on 16/11/29.
  */
 public class WeatherInfo {
+    //天气图片代码
     private String code;
+    //天气简介
     private String weather;
+    //温度
     private String highTemp;
+    //风向
     private String windDirect;
+    //风力
     private String windStrength;
 
     public WeatherInfo(JSONArray jsonArray) {

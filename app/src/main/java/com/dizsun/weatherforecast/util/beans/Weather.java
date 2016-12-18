@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.weather;
+package com.dizsun.weatherforecast.util.beans;
 
 import net.sf.json.JSONObject;
 
@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
  * Created by sundiz on 16/11/29.
  */
 public class Weather {
+    //天气信息
     private String temperature;
     private String humidity;
     private String info;

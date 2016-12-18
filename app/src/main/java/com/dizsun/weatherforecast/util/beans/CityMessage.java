@@ -1,4 +1,4 @@
-package com.dizsun.weatherforecast.util.city;
+package com.dizsun.weatherforecast.util.beans;
 
 
 import net.sf.json.JSONObject;
@@ -6,16 +6,20 @@ import net.sf.json.JSONObject;
 /**
  * Created by sundiz on 16/11/29.
  */
-public class CityBean {
+public class CityMessage {
+    //城市编号
     private String id;
+    //省份
     private String province;
+    //市
     private String city;
+    //县(区)
     private String district;
 
-    public CityBean() {
+    public CityMessage() {
     }
 
-    public CityBean(JSONObject value){
+    public CityMessage(JSONObject value){
         JSONObject jsonObject = JSONObject.fromObject(value);
         id=jsonObject.getString("id");
         province=jsonObject.getString("province");
