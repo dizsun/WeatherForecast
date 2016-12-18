@@ -2,17 +2,23 @@ package com.dizsun.weatherforecast;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,6 +30,7 @@ import com.dizsun.weatherforecast.util.PureNetUtil;
 import com.dizsun.weatherforecast.util.WeatherUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -53,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     private float startY;                           //按下屏幕的y坐标
     private float oldY;                             //滑动时的上一时刻的y坐标
-    private boolean shouldRefresh=false;            //标记下滑时是否应该更新
+    private boolean shouldRefresh = false;            //标记下滑时是否应该更新
     /**
      * 处理线程回传的数据，根据<b>what</b>值来确定下一步更新那些组件
      */
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         txtAirConditionIndex = (TextView) findViewById(R.id.txtAirConditionIndex);
         txtWashCarIndex = (TextView) findViewById(R.id.txtWashCarIndex);
         futureWeatherList = (ListView) findViewById(R.id.futureWeatherList);
-         // 设置单击监听器，单击图标刷新天气数据
+        // 设置单击监听器，单击图标刷新天气数据
         imgWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,13 +204,13 @@ public class MainActivity extends AppCompatActivity {
                         myScrollView.smoothScrollBy(0, -(int) distance);
                         oldY = motionEvent.getY();
                         if (myScrollView.getScrollY() == 0 && oldY - startY >= 400) {
-                            shouldRefresh=true;
+                            shouldRefresh = true;
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        if(shouldRefresh){
+                        if (shouldRefresh) {
                             initCitiesUtil();
-                            shouldRefresh=false;
+                            shouldRefresh = false;
                         }
                         break;
                 }
@@ -250,8 +257,9 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.select_city:
-                Intent intent = new Intent(context, SelectCity.class);
-                startActivityForResult(intent, 100);
+//                Intent intent = new Intent(context, SelectCity.class);
+//                startActivityForResult(intent, 100);
+                showSelectDialog();
                 break;
             case R.id.exit:
                 finish();
@@ -259,6 +267,37 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void showSelectDialog() {
+//        String selectedProvince, selectedCity, selectedDistrict;
+//        //判断当前列表内容时用到的标记常量
+//        final int STATE_PROVINCE = 0;
+//        final int STATE_CITY = 1;
+//        final int STATE_DISTRICT = 3;
+//        //当前列表显示状态
+//        int state = 0;
+        ArrayAdapter<String> selectAdapter = new ArrayAdapter<>(context, R.layout.select_city_item, R.id.txtCityItem, citiesUtil.getProvinces());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("选择城市");
+        OnCitySelectListener onCitySelected=new OnCitySelectListener();
+        onCitySelected.citiesUtil=citiesUtil;
+        onCitySelected.selectAdapter=selectAdapter;
+
+        builder.setSingleChoiceItems(selectAdapter, 0, onCitySelected);
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(onCitySelected.isCompleted){
+                    citiesUtil.setCityMessage(onCitySelected.cityMessage);
+                    initCitiesUtil();
+                }
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.create().show();
+    }
+
 
     /**
      * 接受SelectActivity回传的数据，填充到cityMessage中并刷新页面

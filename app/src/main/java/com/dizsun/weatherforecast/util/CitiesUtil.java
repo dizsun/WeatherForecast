@@ -1,6 +1,7 @@
 package com.dizsun.weatherforecast.util;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.dizsun.weatherforecast.util.beans.CityMessage;
 
@@ -57,8 +58,10 @@ public class CitiesUtil {
             this.mValue = mValue;
             try {
                 FileHelper.writeData(this.mContext,FileHelper.CITIES_FILE,this.mValue);
+                Log.d("WF","citiesUtils的初始化");
+                if(!getCityTable()) throw new Exception("城市列表初始化失败！");
             }catch (Exception e){
-                System.err.println("文件写入失败");
+                System.err.println(e.getMessage());
             }
         }
     }
