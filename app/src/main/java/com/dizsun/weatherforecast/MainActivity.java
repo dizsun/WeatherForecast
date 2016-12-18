@@ -10,15 +10,12 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -30,7 +27,6 @@ import com.dizsun.weatherforecast.util.PureNetUtil;
 import com.dizsun.weatherforecast.util.WeatherUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -96,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        showSplashScreen();
         context = this;
         citiesUtil = new CitiesUtil(context);
         weatherUtil = new WeatherUtil(context, citiesUtil);
@@ -131,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         cityMessage.setCity("西安");
         cityMessage.setDistrict("长安");
         citiesUtil.setCityMessage(cityMessage);
-        showSplashScreen();
         initCitiesUtil();
     }
 
@@ -257,8 +253,6 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.select_city:
-//                Intent intent = new Intent(context, SelectCity.class);
-//                startActivityForResult(intent, 100);
                 showSelectDialog();
                 break;
             case R.id.exit:
@@ -268,14 +262,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * 开启一个显示选择城市的对话框
+     */
     private void showSelectDialog() {
-//        String selectedProvince, selectedCity, selectedDistrict;
-//        //判断当前列表内容时用到的标记常量
-//        final int STATE_PROVINCE = 0;
-//        final int STATE_CITY = 1;
-//        final int STATE_DISTRICT = 3;
-//        //当前列表显示状态
-//        int state = 0;
         ArrayAdapter<String> selectAdapter = new ArrayAdapter<>(context, R.layout.select_city_item, R.id.txtCityItem, citiesUtil.getProvinces());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
