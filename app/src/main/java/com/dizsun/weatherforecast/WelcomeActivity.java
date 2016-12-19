@@ -36,10 +36,6 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-//        ImageView progressSpinner = (ImageView) findViewById(R.id.imgProgress);
-//        Animation animation = AnimationUtils.loadAnimation(this, R.anim.progress_animation);
-//        animation.setInterpolator(new LinearInterpolator());
-//        progressSpinner.startAnimation(animation);
         if(!FileHelper.existFile(this,FileHelper.CITIES_FILE)){
             new Thread(new PureNetUtil(PureNetUtil.GET_CITIES, null, handler)).start();
         }
