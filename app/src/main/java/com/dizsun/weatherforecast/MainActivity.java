@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -128,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         cityMessage.setCity("西安");
         cityMessage.setDistrict("长安");
         citiesUtil.setCityMessage(cityMessage);
+//        dismissSplashScreen();
         initCitiesUtil();
     }
 
@@ -229,6 +233,10 @@ public class MainActivity extends AppCompatActivity {
         splashDialog.setContentView(R.layout.activity_splash);
         splashDialog.setCancelable(false);
         splashDialog.show();
+        ImageView progressSpinner = (ImageView) splashDialog.findViewById(R.id.imgProgress);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.progress_animation);
+        animation.setInterpolator(new LinearInterpolator());
+        progressSpinner.startAnimation(animation);
     }
 
     /**
@@ -236,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void dismissSplashScreen() {
         if (splashDialog != null) {
+            splashDialog.findViewById(R.id.imgProgress).clearAnimation();
             splashDialog.dismiss();
             splashDialog = null;
         }

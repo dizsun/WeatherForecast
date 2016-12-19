@@ -28,13 +28,14 @@ public class CitiesUtil {
     private HashMap<String, HashMap<String, ArrayList<String>>> mCityTable = null;
 
 
-    public CitiesUtil(Context context, String value) {
+    public CitiesUtil(Context context, String value) throws Exception{
         this.mValue = value;
         this.mContext = context;
         try {
             FileHelper.writeData(this.mContext,FileHelper.CITIES_FILE,this.mValue);
         }catch (Exception e){
             System.err.println("文件写入失败");
+            throw new Exception();
         }
     }
 

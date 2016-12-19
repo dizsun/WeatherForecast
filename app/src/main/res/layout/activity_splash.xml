@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/splash_view">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/progressSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressSpinner"
-        android:src="@drawable/weatherforecast_logo"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="61dp"/>
+        android:layout_marginTop="61dp"
+        android:src="@drawable/weatherforecast_logo"/>
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/textView"
+        android:layout_below="@+id/progressSpinner"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="51dp"
         android:text="@string/app_name"
-        android:layout_below="@+id/progressSpinner"
-        android:layout_centerHorizontal="true"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:text="@string/copyright"
-        android:id="@+id/textView2"
-        android:layout_marginTop="16dp"
-        android:textSize="8sp"
         android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/copyright"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="12sp"/>
+
+    <ImageView
+        android:id="@+id/imgProgress"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="35dp"
+        app:srcCompat="@drawable/progress"
+        android:layout_below="@+id/textView2"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>
