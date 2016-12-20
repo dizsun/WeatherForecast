@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_marginTop="50dp"
+    android:id="@+id/swipeRefresh">
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
@@ -20,8 +29,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.dizsun.weatherforecast.MainActivity"
-        tools:showIn="@layout/activity_main"
-        android:layout_marginTop="50dp">
+        tools:showIn="@layout/activity_main">
 
         <!--图片和基本信息-->
 
@@ -320,3 +328,4 @@
             android:layout_height="420dp"/>
     </LinearLayout>
 </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
      * 更新城市信息，然后刷新页面数据
      */
     private void initCitiesUtil() {
+        //TODO 如果最终WelcomeActivity仍然能够初始化CitiesUtil的话，那么这个函数是可以并到refreshPM25里面去的
         if (FileHelper.existFile(context, FileHelper.CITIES_FILE)) {
             refreshPM25();
         } else {
