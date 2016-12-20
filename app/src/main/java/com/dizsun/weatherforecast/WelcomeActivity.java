@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.dizsun.weatherforecast.util.CitiesUtil;
 import com.dizsun.weatherforecast.util.FileHelper;
@@ -26,6 +27,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 try {
                     new CitiesUtil(context,value);
                 } catch (Exception e) {
+                    Toast.makeText(context,"城市列表初始化失败！",Toast.LENGTH_LONG).show();
                     context.finish();
                 }
             }

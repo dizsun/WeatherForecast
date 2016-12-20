@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dizsun.weatherforecast.util.CitiesUtil;
 import com.dizsun.weatherforecast.util.WrongCityException;
@@ -70,12 +71,13 @@ public class MainActivity extends AppCompatActivity {
                 String value = (String) msg.obj;
                 try {
                     weatherUtil.setValue(value);
+                    futureWeatherAdapter.setFutureBriefs(weatherUtil.getWeatherBriefs());
+                    futureWeatherList.setAdapter(futureWeatherAdapter);
+                    initMain();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(context, "天气信息获取失败！", Toast.LENGTH_LONG).show();
                 }
-                futureWeatherAdapter.setFutureBriefs(weatherUtil.getWeatherBriefs());
-                futureWeatherList.setAdapter(futureWeatherAdapter);
-                initMain();
                 dismissSplashScreen();
             }
         }
@@ -92,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             citiesUtil = new CitiesUtil(context);
         } catch (WrongCityException e) {
-            e.printStackTrace();
+            Toast.makeText(context, "城市列表初始化失败！", Toast.LENGTH_LONG).show();
+            finish();
         }
         weatherUtil = new WeatherUtil(context, citiesUtil);
-        refreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         //实例化各组件
         imgWeather = (ImageView) findViewById(R.id.imgWeather);
         txtCityName = (TextView) findViewById(R.id.txtCityName);
@@ -130,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         citiesUtil.setCityMessage(cityMessage);
         beginRefresh();
     }
+
     /**
      * 刷新数据
      */
@@ -204,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 关闭开头缓存页面
+     * 关闭开头缓存/刷新页面
      */
     private void dismissSplashScreen() {
         if (splashDialog != null) {
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             splashDialog.dismiss();
             splashDialog = null;
         }
-        if(refreshLayout.isRefreshing()){
+        if (refreshLayout != null && refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(false);
         }
     }
@@ -239,22 +243,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 开启一个显示选择城市的对话框
+     * 开启一个显示选择城市的对话框，如果选择了城市信息则更新城市
      */
     private void showSelectDialog() {
         ArrayAdapter<String> selectAdapter = new ArrayAdapter<>(context, R.layout.select_city_item, R.id.txtCityItem, citiesUtil.getProvinces());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("选择城市");
-        OnCitySelectListener onCitySelected=new OnCitySelectListener();
-        onCitySelected.citiesUtil=citiesUtil;
-        onCitySelected.selectAdapter=selectAdapter;
+        OnCitySelectListener onCitySelected = new OnCitySelectListener();
+        onCitySelected.citiesUtil = citiesUtil;
+        onCitySelected.selectAdapter = selectAdapter;
 
         builder.setSingleChoiceItems(selectAdapter, 0, onCitySelected);
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if(onCitySelected.isCompleted){
+                if (onCitySelected.isCompleted) {
                     citiesUtil.setCityMessage(onCitySelected.cityMessage);
                     beginRefresh();
                 }
@@ -266,9 +270,6 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 将name补位成两位数，如1补成01
-     *
-     * @param name
-     * @return
      */
     private String nameConverter(String name) {
         if (name.length() == 1) return "0" + name;
