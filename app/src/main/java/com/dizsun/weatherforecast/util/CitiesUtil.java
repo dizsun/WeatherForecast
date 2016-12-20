@@ -39,7 +39,7 @@ public class CitiesUtil {
         }
     }
 
-    public CitiesUtil(Context context) {
+    public CitiesUtil(Context context) throws WrongCityException{
         this.mContext = context;
         if(mValue==null &&existCityFile()){
             try {
@@ -47,6 +47,7 @@ public class CitiesUtil {
                 if(!getCityTable()) throw new Exception("城市列表初始化失败！");
             }catch (Exception e){
                 System.err.println("文件读取失败");
+                throw new WrongCityException();
             }
         }
     }

@@ -3,16 +3,15 @@ package com.dizsun.weatherforecast;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,8 +23,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dizsun.weatherforecast.util.CitiesUtil;
+import com.dizsun.weatherforecast.util.WrongCityException;
 import com.dizsun.weatherforecast.util.beans.CityMessage;
-import com.dizsun.weatherforecast.util.FileHelper;
 import com.dizsun.weatherforecast.util.PureNetUtil;
 import com.dizsun.weatherforecast.util.WeatherUtil;
 
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Context context;                                //上下文，指向自己
     CitiesUtil citiesUtil;                          //操作城市集合的工具
     WeatherUtil weatherUtil;                        //操作天气的工具
+    private SwipeRefreshLayout refreshLayout;
     private ImageView imgWeather;                   //今日天气图标
     private TextView txtCityName;                   //当前查询的城市名
     private TextView txtCurrentDate;                //当前日期
@@ -56,21 +56,13 @@ public class MainActivity extends AppCompatActivity {
     private FutureWeatherAdapter futureWeatherAdapter;
     private Dialog splashDialog;                    //应用开启时的缓冲页面
     private ListView futureWeatherList;             //未来天气简介列表
-
-    private float startY;                           //按下屏幕的y坐标
-    private float oldY;                             //滑动时的上一时刻的y坐标
-    private boolean shouldRefresh = false;            //标记下滑时是否应该更新
     /**
      * 处理线程回传的数据，根据<b>what</b>值来确定下一步更新那些组件
      */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == PureNetUtil.WHAT_CITY) {
-                String value = ((String) msg.obj);
-                citiesUtil.setValue(value);
-                refreshPM25();
-            } else if (msg.what == PureNetUtil.WHAT_PM25) {
+            if (msg.what == PureNetUtil.WHAT_PM25) {
                 String value = (String) msg.obj;
                 weatherUtil.initPm25(value);
                 initWeatherUtil();
@@ -97,8 +89,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         showSplashScreen();
         context = this;
-        citiesUtil = new CitiesUtil(context);
+        try {
+            citiesUtil = new CitiesUtil(context);
+        } catch (WrongCityException e) {
+            e.printStackTrace();
+        }
         weatherUtil = new WeatherUtil(context, citiesUtil);
+        refreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipeRefresh);
         //实例化各组件
         imgWeather = (ImageView) findViewById(R.id.imgWeather);
         txtCityName = (TextView) findViewById(R.id.txtCityName);
@@ -120,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         imgWeather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initCitiesUtil();
+                beginRefresh();
             }
         });
 
@@ -131,26 +128,12 @@ public class MainActivity extends AppCompatActivity {
         cityMessage.setCity("西安");
         cityMessage.setDistrict("长安");
         citiesUtil.setCityMessage(cityMessage);
-//        dismissSplashScreen();
-        initCitiesUtil();
+        beginRefresh();
     }
-
     /**
-     * 更新城市信息，然后刷新页面数据
+     * 刷新数据
      */
-    private void initCitiesUtil() {
-        //TODO 如果最终WelcomeActivity仍然能够初始化CitiesUtil的话，那么这个函数是可以并到refreshPM25里面去的
-        if (FileHelper.existFile(context, FileHelper.CITIES_FILE)) {
-            refreshPM25();
-        } else {
-            new Thread(new PureNetUtil(PureNetUtil.GET_CITIES, null, handler)).start();
-        }
-    }
-
-    /**
-     * 刷新pm25数据
-     */
-    private void refreshPM25() {
+    private void beginRefresh() {
         new Thread(new PureNetUtil(PureNetUtil.GET_PM25, citiesUtil.getCityMessage().getCity(), handler)).start();
     }
 
@@ -192,30 +175,10 @@ public class MainActivity extends AppCompatActivity {
         //没有这一句时初始时scrollview会滑到最下面，这是让其滑到最上面，另外这一句必须在页面初始化后才能起作用，所以放在初始化语句的后面
         ScrollView myScrollView = (ScrollView) findViewById(R.id.myScrollView);
         myScrollView.smoothScrollTo(0, 0);
-        myScrollView.setOnTouchListener(new View.OnTouchListener() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        oldY = motionEvent.getY();
-                        startY = oldY;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float distance = motionEvent.getY() - oldY;
-                        myScrollView.smoothScrollBy(0, -(int) distance);
-                        oldY = motionEvent.getY();
-                        if (myScrollView.getScrollY() == 0 && oldY - startY >= 400) {
-                            shouldRefresh = true;
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (shouldRefresh) {
-                            initCitiesUtil();
-                            shouldRefresh = false;
-                        }
-                        break;
-                }
-                return true;
+            public void onRefresh() {
+                beginRefresh();
             }
         });
     }
@@ -248,6 +211,9 @@ public class MainActivity extends AppCompatActivity {
             splashDialog.findViewById(R.id.imgProgress).clearAnimation();
             splashDialog.dismiss();
             splashDialog = null;
+        }
+        if(refreshLayout.isRefreshing()){
+            refreshLayout.setRefreshing(false);
         }
     }
 
@@ -290,32 +256,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(onCitySelected.isCompleted){
                     citiesUtil.setCityMessage(onCitySelected.cityMessage);
-                    initCitiesUtil();
+                    beginRefresh();
                 }
             }
         });
         builder.setNegativeButton("取消", null);
         builder.create().show();
-    }
-
-
-    /**
-     * 接受SelectActivity回传的数据，填充到cityMessage中并刷新页面
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        String province = data.getStringExtra("province");
-        String city = data.getStringExtra("city");
-        String district = data.getStringExtra("district");
-        citiesUtil.getCityMessage().setProvince(province);
-        citiesUtil.getCityMessage().setCity(city);
-        citiesUtil.getCityMessage().setDistrict(district);
-        initCitiesUtil();
     }
 
     /**
