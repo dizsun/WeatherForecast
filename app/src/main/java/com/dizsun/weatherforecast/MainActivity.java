@@ -3,6 +3,7 @@ package com.dizsun.weatherforecast;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     Context context;                                //上下文，指向自己
     CitiesUtil citiesUtil;                          //操作城市集合的工具
     WeatherUtil weatherUtil;                        //操作天气的工具
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor preferencesEditor;
     private SwipeRefreshLayout refreshLayout;
     private ImageView imgWeather;                   //今日天气图标
     private TextView txtCityName;                   //当前查询的城市名
@@ -83,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 创建Activity时进行的工作
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         weatherUtil = new WeatherUtil(context, citiesUtil);
+        sharedPreferences = getSharedPreferences("WeatherForecast", MODE_PRIVATE);
+        preferencesEditor = sharedPreferences.edit();
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         //实例化各组件
         imgWeather = (ImageView) findViewById(R.id.imgWeather);
@@ -127,15 +135,15 @@ public class MainActivity extends AppCompatActivity {
         futureWeatherAdapter = new FutureWeatherAdapter(context);
         //初始化时设为西安长安区的天气
         CityMessage cityMessage = new CityMessage();
-        cityMessage.setProvince("陕西");
-        cityMessage.setCity("西安");
-        cityMessage.setDistrict("长安");
+        cityMessage.setProvince(sharedPreferences.getString("province", "陕西"));
+        cityMessage.setCity(sharedPreferences.getString("city", "西安"));
+        cityMessage.setDistrict(sharedPreferences.getString("district", "长安"));
         citiesUtil.setCityMessage(cityMessage);
         beginRefresh();
     }
 
     /**
-     * 刷新数据
+     * 开始刷新数据
      */
     private void beginRefresh() {
         new Thread(new PureNetUtil(PureNetUtil.GET_PM25, citiesUtil.getCityMessage().getCity(), handler)).start();
@@ -259,6 +267,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (onCitySelected.isCompleted) {
+                    preferencesEditor.putString("province",onCitySelected.cityMessage.getProvince());
+                    preferencesEditor.putString("city",onCitySelected.cityMessage.getCity());
+                    preferencesEditor.putString("district",onCitySelected.cityMessage.getDistrict());
+                    preferencesEditor.commit();
                     citiesUtil.setCityMessage(onCitySelected.cityMessage);
                     beginRefresh();
                 }

@@ -11,20 +11,21 @@ import com.dizsun.weatherforecast.util.beans.CityMessage;
  */
 
 public class OnCitySelectListener implements DialogInterface.OnClickListener {
-    public CitiesUtil citiesUtil;
-    public ArrayAdapter<String> selectAdapter;
-    public String selectedProvince, selectedCity, selectedDistrict;
+    CitiesUtil citiesUtil;
+    ArrayAdapter<String> selectAdapter;
+    private String selectedProvince, selectedCity, selectedDistrict;
     //判断当前列表内容时用到的标记常量
-    final int STATE_PROVINCE = 0;
-    final int STATE_CITY = 1;
-    final int STATE_DISTRICT = 3;
+    private final int STATE_PROVINCE = 0;
+    private final int STATE_CITY = 1;
+    private final int STATE_DISTRICT = 3;
     //当前列表显示状态
-    int state = 0;
-    public boolean isCompleted=false;
-    CityMessage cityMessage=new CityMessage();
+    private int state = 0;
+    boolean isCompleted = false;
+    CityMessage cityMessage = new CityMessage();
+
     @Override
     public void onClick(DialogInterface dialogInterface, int position) {
-        switch (state){
+        switch (state) {
             case STATE_PROVINCE:
                 selectedProvince = citiesUtil.getProvinces().get(position);
                 selectAdapter.clear();
@@ -44,7 +45,7 @@ public class OnCitySelectListener implements DialogInterface.OnClickListener {
             case STATE_DISTRICT:
                 selectedDistrict = citiesUtil.getDistrics(selectedProvince, selectedCity).get(position);
                 cityMessage.setDistrict(selectedDistrict);
-                isCompleted=true;
+                isCompleted = true;
                 break;
         }
     }
